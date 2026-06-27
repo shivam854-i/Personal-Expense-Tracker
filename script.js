@@ -158,6 +158,7 @@ function updateFormUiForType() {
     submitBtn.classList.remove('btn-expense-submit');
     submitBtn.classList.add('btn-income-submit');
     submitBtn.textContent = editId ? 'Save Income' : 'Add Income';
+    titleInput.placeholder = 'e.g. Monthly Salary';
     categoriesToUse = INCOME_CATEGORIES;
   } else {
     formCard.classList.remove('form-income');
@@ -165,6 +166,7 @@ function updateFormUiForType() {
     submitBtn.classList.remove('btn-income-submit');
     submitBtn.classList.add('btn-expense-submit');
     submitBtn.textContent = editId ? 'Save Expense' : 'Add Expense';
+    titleInput.placeholder = 'e.g. Grocery Shop';
     categoriesToUse = EXPENSE_CATEGORIES;
   }
 
