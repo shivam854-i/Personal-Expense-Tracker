@@ -58,13 +58,20 @@ const monthlyTotalExpenseEl = document.getElementById('monthlyTotalExpense');
 const categoryBreakdownListEl = document.getElementById('categoryBreakdownList');
 
 // --- 3. Initial Setup & Event Listeners ---
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSpendWise);
+} else {
+  initSpendWise();
+}
+
+function initSpendWise() {
   initTheme();
   setDefaultDate();
   loadData();
   renderApp();
   setupEventListeners();
-});
+  updateFormUiForType();
+}
 
 // Setup Event Listeners
 function setupEventListeners() {
@@ -96,6 +103,10 @@ function setupEventListeners() {
   // Export CSV Action
   exportCsvBtn.addEventListener('click', exportToCSV);
 
+  // Transaction Type switchers
+  typeExpense.addEventListener('change', updateFormUiForType);
+  typeIncome.addEventListener('change', updateFormUiForType);
+
   // Real-time error clearing on typing/changing
   titleInput.addEventListener('input', () => validateField(titleInput, titleError, () => titleInput.value.trim() !== ''));
   amountInput.addEventListener('input', () => validateField(amountInput, amountError, () => {
@@ -104,6 +115,26 @@ function setupEventListeners() {
   }));
   categoryInput.addEventListener('change', () => validateField(categoryInput, categoryError, () => categoryInput.value !== ''));
   dateInput.addEventListener('input', () => validateField(dateInput, dateError, () => dateInput.value !== ''));
+}
+
+// Updates form buttons and headers dynamically based on selected transaction type
+function updateFormUiForType() {
+  const formCard = document.getElementById('formCard');
+  if (!formCard) return;
+
+  if (typeIncome.checked) {
+    formCard.classList.remove('form-expense');
+    formCard.classList.add('form-income');
+    submitBtn.classList.remove('btn-expense-submit');
+    submitBtn.classList.add('btn-income-submit');
+    submitBtn.textContent = editId ? 'Save Income' : 'Add Income';
+  } else {
+    formCard.classList.remove('form-income');
+    formCard.classList.add('form-expense');
+    submitBtn.classList.remove('btn-income-submit');
+    submitBtn.classList.add('btn-expense-submit');
+    submitBtn.textContent = editId ? 'Save Expense' : 'Add Expense';
+  }
 }
 
 // --- 4. Theme Management (Dark / Light Mode) ---
@@ -297,6 +328,7 @@ function resetForm() {
   
   // Ensure default radio buttons match state
   typeExpense.checked = true;
+  updateFormUiForType();
 }
 
 // Switches form into editing mode for a transaction
@@ -323,6 +355,8 @@ function enterEditMode(id) {
   } else {
     typeExpense.checked = true;
   }
+
+  updateFormUiForType();
 
   // Smooth scroll to the form card for mobile devices
   document.getElementById('formCard').scrollIntoView({ behavior: 'smooth' });

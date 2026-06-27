@@ -254,6 +254,18 @@ p {
   box-shadow: var(--shadow-premium);
 }
 
+#formCard {
+  border-top: 4px solid transparent;
+}
+
+#formCard.form-income {
+  border-top-color: var(--income);
+}
+
+#formCard.form-expense {
+  border-top-color: var(--expense);
+}
+
 .card-header {
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
@@ -461,6 +473,22 @@ form {
 
 .btn-primary:active {
   transform: translateY(0);
+}
+
+.btn-income-submit {
+  background-color: var(--income) !important;
+}
+
+.btn-income-submit:hover {
+  background-color: var(--income-hover) !important;
+}
+
+.btn-expense-submit {
+  background-color: var(--expense) !important;
+}
+
+.btn-expense-submit:hover {
+  background-color: var(--expense-hover) !important;
 }
 
 .btn-secondary {
