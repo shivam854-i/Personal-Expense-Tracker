@@ -372,11 +372,9 @@ form {
   gap: 0.25rem;
 }
 
-.type-toggle-group input[type="radio"] {
-  display: none;
-}
-
-.type-toggle-label {
+.type-toggle-btn {
+  background: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -384,23 +382,25 @@ form {
   padding: 0.6rem;
   font-size: 0.9rem;
   font-weight: 600;
+  font-family: var(--font-family);
   color: var(--text-secondary);
   border-radius: var(--radius-sm);
   cursor: pointer;
   user-select: none;
   transition: var(--transition-smooth);
+  outline: none;
 }
 
-.type-toggle-group input[type="radio"]:checked + .type-toggle-label {
+.type-toggle-btn.active {
   background: var(--bg-card);
   box-shadow: var(--shadow-sm);
 }
 
-.type-toggle-group input#typeExpense:checked + .expense-label {
+.type-toggle-btn#typeExpenseBtn.active {
   color: var(--expense);
 }
 
-.type-toggle-group input#typeIncome:checked + .income-label {
+.type-toggle-btn#typeIncomeBtn.active {
   color: var(--income);
 }
 

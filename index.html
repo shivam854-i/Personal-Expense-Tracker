@@ -67,21 +67,19 @@
             <div class="form-group">
               <label class="label">Transaction Type</label>
               <div class="type-toggle-group">
-                <input type="radio" id="typeExpense" name="transactionType" value="expense" checked>
-                <label for="typeExpense" class="type-toggle-label expense-label">
+                <button type="button" id="typeExpenseBtn" class="type-toggle-btn active" aria-pressed="true">
                   <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round" transform="rotate(45, 12, 12)"/>
                   </svg>
                   Expense
-                </label>
+                </button>
                 
-                <input type="radio" id="typeIncome" name="transactionType" value="income">
-                <label for="typeIncome" class="type-toggle-label income-label">
+                <button type="button" id="typeIncomeBtn" class="type-toggle-btn" aria-pressed="false">
                   <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                   Income
-                </label>
+                </button>
               </div>
             </div>
 
@@ -275,6 +273,6 @@
     </main>
   </div>
 
-  <script src="script.js?v=3"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>

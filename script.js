@@ -7,6 +7,7 @@
 // --- 1. Global Application State ---
 let transactions = [];
 let editId = null; // Tracks the transaction being edited
+let selectedType = 'expense'; // Default type state (can be 'expense' or 'income')
 
 // Predefined category lists
 const EXPENSE_CATEGORIES = ['Food', 'Transport', 'Shopping', 'Bills', 'Entertainment', 'Education', 'Other'];
@@ -24,8 +25,8 @@ const submitBtn = document.getElementById('submitBtn');
 const cancelEditBtn = document.getElementById('cancelEditBtn');
 
 // Form Input Elements
-const typeExpense = document.getElementById('typeExpense');
-const typeIncome = document.getElementById('typeIncome');
+const typeExpenseBtn = document.getElementById('typeExpenseBtn');
+const typeIncomeBtn = document.getElementById('typeIncomeBtn');
 const titleInput = document.getElementById('title');
 const amountInput = document.getElementById('amount');
 const categoryInput = document.getElementById('category');
@@ -104,9 +105,9 @@ function setupEventListeners() {
   // Export CSV Action
   exportCsvBtn.addEventListener('click', exportToCSV);
 
-  // Transaction Type switchers
-  typeExpense.addEventListener('change', updateFormUiForType);
-  typeIncome.addEventListener('change', updateFormUiForType);
+  // Transaction Type switchers (Buttons click handlers)
+  typeExpenseBtn.addEventListener('click', () => selectTransactionType('expense'));
+  typeIncomeBtn.addEventListener('click', () => selectTransactionType('income'));
 
   // Real-time error clearing on typing/changing
   titleInput.addEventListener('input', () => validateField(titleInput, titleError, () => titleInput.value.trim() !== ''));
@@ -116,6 +117,27 @@ function setupEventListeners() {
   }));
   categoryInput.addEventListener('change', () => validateField(categoryInput, categoryError, () => categoryInput.value !== ''));
   dateInput.addEventListener('input', () => validateField(dateInput, dateError, () => dateInput.value !== ''));
+}
+
+// Switches the current transaction type state and triggers UI updates
+function selectTransactionType(type) {
+  selectedType = type;
+  console.log('Transaction type toggled to:', selectedType);
+
+  // Visually toggle active states
+  if (selectedType === 'income') {
+    typeIncomeBtn.classList.add('active');
+    typeExpenseBtn.classList.remove('active');
+    typeIncomeBtn.setAttribute('aria-pressed', 'true');
+    typeExpenseBtn.setAttribute('aria-pressed', 'false');
+  } else {
+    typeExpenseBtn.classList.add('active');
+    typeIncomeBtn.classList.remove('active');
+    typeExpenseBtn.setAttribute('aria-pressed', 'true');
+    typeIncomeBtn.setAttribute('aria-pressed', 'false');
+  }
+
+  updateFormUiForType();
 }
 
 // Updates form buttons, headers, and category options dynamically based on selected transaction type
@@ -130,7 +152,7 @@ function updateFormUiForType() {
 
   let categoriesToUse = [];
 
-  if (typeIncome.checked) {
+  if (selectedType === 'income') {
     formCard.classList.remove('form-expense');
     formCard.classList.add('form-income');
     submitBtn.classList.remove('btn-expense-submit');
@@ -309,10 +331,12 @@ function handleFormSubmit(e) {
 
   // Extract form values
   const title = titleInput.value.trim();
-  const type = typeExpense.checked ? 'expense' : 'income';
+  const type = selectedType;
   const amount = parseFloat(amountInput.value);
   const category = categoryInput.value;
   const date = dateInput.value;
+
+  console.log('Submitting transaction:', { title, type, amount, category, date });
 
   if (editId) {
     // Edit mode: Update existing transaction
@@ -349,9 +373,8 @@ function resetForm() {
     grp.classList.remove('invalid');
   });
   
-  // Ensure default radio buttons match state
-  typeExpense.checked = true;
-  updateFormUiForType();
+  // Reset selectedType state and visuals
+  selectTransactionType('expense');
 }
 
 // Switches form into editing mode for a transaction
@@ -373,13 +396,7 @@ function enterEditMode(id) {
   categoryInput.value = transaction.category;
   dateInput.value = transaction.date;
 
-  if (transaction.type === 'income') {
-    typeIncome.checked = true;
-  } else {
-    typeExpense.checked = true;
-  }
-
-  updateFormUiForType();
+  selectTransactionType(transaction.type);
 
   // Smooth scroll to the form card for mobile devices
   document.getElementById('formCard').scrollIntoView({ behavior: 'smooth' });
