@@ -44,6 +44,15 @@
   --cat-other: #64748b;
   --cat-other-bg: rgba(100, 116, 139, 0.12);
   
+  --cat-salary: #10b981;
+  --cat-salary-bg: rgba(16, 185, 129, 0.12);
+  --cat-freelance: #06b6d4;
+  --cat-freelance-bg: rgba(6, 182, 212, 0.12);
+  --cat-business: #6366f1;
+  --cat-business-bg: rgba(99, 102, 241, 0.12);
+  --cat-investments: #f59e0b;
+  --cat-investments-bg: rgba(245, 158, 11, 0.12);
+  
   /* Shadows & Layout config */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
@@ -97,6 +106,15 @@
   --cat-entertainment: #fb7185;
   --cat-education: #22d3ee;
   --cat-other: #94a3b8;
+  
+  --cat-salary: #34d399;
+  --cat-salary-bg: rgba(52, 211, 153, 0.15);
+  --cat-freelance: #22d3ee;
+  --cat-freelance-bg: rgba(34, 211, 238, 0.15);
+  --cat-business: #818cf8;
+  --cat-business-bg: rgba(129, 140, 248, 0.15);
+  --cat-investments: #fbbf24;
+  --cat-investments-bg: rgba(251, 191, 36, 0.15);
 }
 
 /* 2. Global Reset and Base Styles */
@@ -861,6 +879,10 @@ form {
 .cat-entertainment { color: var(--cat-entertainment); background-color: var(--cat-entertainment-bg); }
 .cat-education { color: var(--cat-education); background-color: var(--cat-education-bg); }
 .cat-other { color: var(--cat-other); background-color: var(--cat-other-bg); }
+.cat-salary { color: var(--cat-salary); background-color: var(--cat-salary-bg); }
+.cat-freelance { color: var(--cat-freelance); background-color: var(--cat-freelance-bg); }
+.cat-business { color: var(--cat-business); background-color: var(--cat-business-bg); }
+.cat-investments { color: var(--cat-investments); background-color: var(--cat-investments-bg); }
 
 /* Amount in Feed */
 .item-amount {

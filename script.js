@@ -8,8 +8,9 @@
 let transactions = [];
 let editId = null; // Tracks the transaction being edited
 
-// Categories predefined list
-const CATEGORIES = ['Food', 'Transport', 'Shopping', 'Bills', 'Entertainment', 'Education', 'Other'];
+// Predefined category lists
+const EXPENSE_CATEGORIES = ['Food', 'Transport', 'Shopping', 'Bills', 'Entertainment', 'Education', 'Other'];
+const INCOME_CATEGORIES = ['Salary', 'Freelance', 'Business', 'Investments', 'Other'];
 
 // --- 2. DOM Elements Selection ---
 const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -117,10 +118,17 @@ function setupEventListeners() {
   dateInput.addEventListener('input', () => validateField(dateInput, dateError, () => dateInput.value !== ''));
 }
 
-// Updates form buttons and headers dynamically based on selected transaction type
+// Updates form buttons, headers, and category options dynamically based on selected transaction type
 function updateFormUiForType() {
   const formCard = document.getElementById('formCard');
   if (!formCard) return;
+
+  const currentCategoryVal = categoryInput.value;
+
+  // Clear all options except the placeholder
+  categoryInput.innerHTML = '<option value="" disabled selected>Select category</option>';
+
+  let categoriesToUse = [];
 
   if (typeIncome.checked) {
     formCard.classList.remove('form-expense');
@@ -128,12 +136,27 @@ function updateFormUiForType() {
     submitBtn.classList.remove('btn-expense-submit');
     submitBtn.classList.add('btn-income-submit');
     submitBtn.textContent = editId ? 'Save Income' : 'Add Income';
+    categoriesToUse = INCOME_CATEGORIES;
   } else {
     formCard.classList.remove('form-income');
     formCard.classList.add('form-expense');
     submitBtn.classList.remove('btn-income-submit');
     submitBtn.classList.add('btn-expense-submit');
     submitBtn.textContent = editId ? 'Save Expense' : 'Add Expense';
+    categoriesToUse = EXPENSE_CATEGORIES;
+  }
+
+  // Populate new options
+  categoriesToUse.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    categoryInput.appendChild(opt);
+  });
+
+  // Restore previous selection if it is valid for the new type
+  if (categoriesToUse.includes(currentCategoryVal)) {
+    categoryInput.value = currentCategoryVal;
   }
 }
 
@@ -206,7 +229,7 @@ function loadData() {
         title: 'Monthly Salary Payment',
         type: 'income',
         amount: 3200.00,
-        category: 'Other',
+        category: 'Salary',
         date: formatDate(3)
       },
       {
@@ -555,7 +578,7 @@ function renderMonthlyInsights() {
 
   // Calculate expense groupings per category
   const breakdown = {};
-  CATEGORIES.forEach(cat => breakdown[cat] = 0);
+  EXPENSE_CATEGORIES.forEach(cat => breakdown[cat] = 0);
 
   monthlyExpenses.forEach(t => {
     if (breakdown[t.category] !== undefined) {
