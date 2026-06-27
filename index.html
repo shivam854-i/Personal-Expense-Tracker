@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendWise — Personal Expense Tracker</title>
+  <meta name="description" content="A premium, responsive Personal Expense Tracker to manage your income, expenses, monthly breakdown, and export data.">
+  
+  <!-- Inter Font from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h1>SpendWise</h1>
+      </div>
+      <div class="header-actions">
+        <!-- Export Button -->
+        <button id="exportCsvBtn" class="btn btn-secondary flex-center gap-2" title="Export transactions to CSV">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="desktop-only">Export CSV</span>
+        </button>
+        <!-- Dark Mode Toggle -->
+        <button id="themeToggleBtn" class="theme-toggle" aria-label="Toggle theme" title="Toggle Light/Dark Mode">
+          <!-- Moon Icon (Dark Mode active will show sun) -->
+          <svg class="theme-icon moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <!-- Sun Icon -->
+          <svg class="theme-icon sun-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5" />
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 18.36l1.42-1.42M18.36 5.64l1.42-1.42" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-grid">
+      
+      <!-- Left Column: Add/Edit Form & Monthly summary -->
+      <section class="dashboard-sidebar">
+        
+        <!-- Transaction Form Card -->
+        <div class="card transaction-card" id="formCard">
+          <div class="card-header">
+            <h2 id="formTitle">Add Transaction</h2>
+            <span id="editBadge" class="badge badge-edit hidden">Edit Mode</span>
+          </div>
+          
+          <form id="transactionForm" novalidate>
+            <!-- Transaction Type Switcher (Income / Expense) -->
+            <div class="form-group">
+              <label class="label">Transaction Type</label>
+              <div class="type-toggle-group">
+                <input type="radio" id="typeExpense" name="transactionType" value="expense" checked>
+                <label for="typeExpense" class="type-toggle-label expense-label">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round" transform="rotate(45, 12, 12)"/>
+                  </svg>
+                  Expense
+                </label>
+                
+                <input type="radio" id="typeIncome" name="transactionType" value="income">
+                <label for="typeIncome" class="type-toggle-label income-label">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Income
+                </label>
+              </div>
+            </div>
+
+            <!-- Title -->
+            <div class="form-group">
+              <label for="title" class="label">Transaction Title</label>
+              <div class="input-wrapper">
+                <input type="text" id="title" placeholder="e.g. Grocery Shop" required>
+              </div>
+              <span class="error-msg" id="titleError">Title is required.</span>
+            </div>
+
+            <!-- Amount -->
+            <div class="form-group">
+              <label for="amount" class="label">Amount (₹ / $)</label>
+              <div class="input-wrapper">
+                <span class="currency-symbol">$</span>
+                <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" required>
+              </div>
+              <span class="error-msg" id="amountError">Please enter a valid amount greater than 0.</span>
+            </div>
+
+            <!-- Category -->
+            <div class="form-group">
+              <label for="category" class="label">Category</label>
+              <div class="input-wrapper select-wrapper">
+                <select id="category" required>
+                  <option value="" disabled selected>Select category</option>
+                  <option value="Food">Food</option>
+                  <option value="Transport">Transport</option>
+                  <option value="Shopping">Shopping</option>
+                  <option value="Bills">Bills</option>
+                  <option value="Entertainment">Entertainment</option>
+                  <option value="Education">Education</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <span class="error-msg" id="categoryError">Please select a category.</span>
+            </div>
+
+            <!-- Date -->
+            <div class="form-group">
+              <label for="date" class="label">Date</label>
+              <div class="input-wrapper">
+                <input type="date" id="date" required>
+              </div>
+              <span class="error-msg" id="dateError">Please select a valid date.</span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+              <button type="submit" id="submitBtn" class="btn btn-primary w-full">Add Transaction</button>
+              <button type="button" id="cancelEditBtn" class="btn btn-secondary w-full hidden">Cancel Edit</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Monthly Expense Summary Card -->
+        <div class="card summary-breakdown-card">
+          <div class="card-header">
+            <h2>Monthly Insights</h2>
+            <span id="currentMonthYear" class="month-label">June 2026</span>
+          </div>
+          <div class="insights-body">
+            <div class="monthly-stat">
+              <div class="text-secondary text-sm">Monthly Expenses</div>
+              <div class="text-lg font-bold" id="monthlyTotalExpense">$0.00</div>
+            </div>
+            
+            <div class="category-breakdown-list" id="categoryBreakdownList">
+              <!-- Dynamically populated monthly category breakdown -->
+              <div class="empty-state-small">No expenses registered for this month.</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Column: Dashboard Stats & Transaction List -->
+      <section class="dashboard-main">
+        
+        <!-- Summary Cards Grid -->
+        <div class="stats-grid">
+          <!-- Total Balance -->
+          <div class="card stat-card balance-card">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="5" width="20" height="14" rx="2" ry="2" />
+                <line x1="2" y1="10" x2="22" y2="10" />
+              </svg>
+            </div>
+            <div class="stat-details">
+              <p class="stat-label">Total Balance</p>
+              <h3 class="stat-value" id="totalBalance">$0.00</h3>
+            </div>
+          </div>
+
+          <!-- Total Income -->
+          <div class="card stat-card income-card">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <p class="stat-label">Total Income</p>
+              <h3 class="stat-value" id="totalIncome">$0.00</h3>
+            </div>
+          </div>
+
+          <!-- Total Expenses -->
+          <div class="card stat-card expense-card">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <p class="stat-label">Total Expenses</p>
+              <h3 class="stat-value" id="totalExpense">$0.00</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transactions List Card -->
+        <div class="card transaction-list-card">
+          
+          <!-- Filters & Search Section -->
+          <div class="list-controls">
+            <!-- Search Title -->
+            <div class="search-box">
+              <div class="search-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </div>
+              <input type="text" id="searchInput" placeholder="Search by title...">
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="filter-group">
+              <!-- Type Filter (Tabs) -->
+              <div class="type-filter-tabs">
+                <button class="tab-btn active" data-type="all">All</button>
+                <button class="tab-btn" data-type="income">Income</button>
+                <button class="tab-btn" data-type="expense">Expense</button>
+              </div>
+
+              <!-- Category Select Filter -->
+              <div class="select-wrapper filter-select-wrapper">
+                <select id="categoryFilter">
+                  <option value="all">All Categories</option>
+                  <option value="Food">Food</option>
+                  <option value="Transport">Transport</option>
+                  <option value="Shopping">Shopping</option>
+                  <option value="Bills">Bills</option>
+                  <option value="Entertainment">Entertainment</option>
+                  <option value="Education">Education</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transaction List Container -->
+          <div class="transactions-container">
+            <ul class="transaction-list" id="transactionList">
+              <!-- Dynamically populated list items -->
+            </ul>
+            
+            <!-- Empty State -->
+            <div class="empty-state hidden" id="emptyState">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <h3>No transactions found</h3>
+              <p>Try adding a new transaction or updating your search filters.</p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
